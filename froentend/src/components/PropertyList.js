@@ -17,7 +17,7 @@ function PropertyList() {
   }, []);
 
   return (
-    <div>
+    <div className="container mt-2">
       <h2>Property List</h2>
       <ul>
         {properties.map((p) => (
