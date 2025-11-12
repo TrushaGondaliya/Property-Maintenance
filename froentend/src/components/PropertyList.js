@@ -1,19 +1,26 @@
 import React, { useEffect, useState } from "react";
 import api from '../api';
+import { useNavigate } from "react-router-dom";
 
-function PropertyList() {
+function PropertyList(props) {
   const [properties, setProperties] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    api.get("/property/list")
-      .then((res) => {
-        if (res.data.success) {
-          setProperties(res.data.data);
-        }
-      })
-      .catch((err) => {
-        console.error("API Error:", err);
-      });
+    if(localStorage.getItem('auth_token')) {
+      api.get("/property/list")
+        .then((res) => {
+          if (res.data.success) {
+            setProperties(res.data.data);
+          }
+        })
+        .catch((err) => {
+          console.error("API Error:", err);
+        });
+    } else {
+      props.showAlert('Please login to the site for access property management', 'danger');
+      navigate('/login');
+    }
   }, []);
 
   return (

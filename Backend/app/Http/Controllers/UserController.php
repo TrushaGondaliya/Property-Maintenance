@@ -28,6 +28,7 @@ class UserController extends Controller
                 return response()->json([
                     'success' => false,
                     'errors' => $validator->errors(),
+                    'custom_error' => 'Please fill form correctly'
                 ], 422);
             }
 
@@ -47,14 +48,14 @@ class UserController extends Controller
             // Step 4: Return success response
             return response()->json([
                 'success' => true,
-                'message' => "User registered successfully!",
-                "auth-token" => $token
+                "auth_token" => $token
             ]);
         } catch (\Throwable $th) {
             DB::rollBack();
             return response()->json([
                 'success' => false,
                 'errors' => $th->getMessage(),
+                'custom_error' => 'Some error occured during the process'
             ], 500);
         }
     }
@@ -73,6 +74,7 @@ class UserController extends Controller
                 return response()->json([
                     'success' => false,
                     'errors' => $validator->errors(),
+                    'custom_error' => 'Error in form validation'
                 ], 422);
             }
 
@@ -82,14 +84,14 @@ class UserController extends Controller
             if(!$user) {
                  return response()->json([
                     'success' => false,
-                    'errors' => 'User not found',
+                    'custom_error' => 'User not found',
                 ], 404);
             }
 
             if ($user && !Hash::check($request->password, $user->password)) {
                 return response()->json([
                     'success' => false,
-                    'errors' => 'Credentials do not match',
+                    'custom_error' => 'Credentials do not match',
                 ], 402);
             } 
             $token = $user->createToken('api-token')->plainTextToken;
@@ -97,15 +99,14 @@ class UserController extends Controller
             // Step 4: Return success response
             return response()->json([
                 'success' => true,
-                'message' => "User Login successfully!",
-                'auth-token' => $token,
-                'data' => $user
+                'auth_token' => $token
             ]);
         } catch (\Throwable $th) {
             DB::rollBack();
             return response()->json([
                 'success' => false,
                 'errors' => $th->getMessage(),
+                'custom_error' => 'Error occured during the process'
             ], 500);
         }
     }

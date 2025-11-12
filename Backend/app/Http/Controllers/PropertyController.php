@@ -40,7 +40,6 @@ class PropertyController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => "property saved successfully!",
             'data' => $property,
         ]);
     }
@@ -69,7 +68,6 @@ class PropertyController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => "property updated successfully!",
             'data' => $property,
         ]);
     }public function delete(Request $request)
@@ -94,7 +92,6 @@ class PropertyController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => "property deleted successfully!",
         ]);
     }
 
