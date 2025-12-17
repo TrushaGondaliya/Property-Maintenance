@@ -10,6 +10,10 @@ class Property extends Model
 {
     use HasFactory, SoftDeletes;
 
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
     protected static function booted()
     {
         static::deleting(function ($property) {

@@ -10,7 +10,13 @@ class PropertyController extends Controller
 {
     public function list()
     {
-        $property = Property::all();
+       $property = Property::with('user')->get();
+
+        $property = $property->map(function ($item) {
+            $item->user_name = $item->user->name ?? null;
+            return $item;
+        });
+
         return response()->json([
             'success' => true,
             'data' => $property
@@ -28,6 +34,7 @@ class PropertyController extends Controller
             return response()->json([
                 'success' => false,
                 'errors' => $validator->errors(),
+                'custom_error' => 'Please fill required data'
             ], 422);
         }
         $data = $request->all();
@@ -56,6 +63,7 @@ class PropertyController extends Controller
             return response()->json([
                 'success' => false,
                 'errors' => $validator->errors(),
+                'custom_error' => 'Please fill required data'
             ], 422);
         }
         $data = $request->all();
@@ -66,11 +74,19 @@ class PropertyController extends Controller
         $property->updated_by = auth()->user()->id;
         $property->save();
 
+        $properties = Property::with('user')->get();
+
+        $properties = $properties->map(function ($item) {
+            $item->user_name = $item->user->name ?? null;
+            return $item;
+        });
+
         return response()->json([
             'success' => true,
-            'data' => $property,
+            'data' => $properties,
         ]);
-    }public function delete(Request $request)
+    }
+    public function delete(Request $request)
     {
         // Step 1: Create a validator instance manually
         $validator = Validator::make($request->all(), [
@@ -82,6 +98,7 @@ class PropertyController extends Controller
             return response()->json([
                 'success' => false,
                 'errors' => $validator->errors(),
+                'custom_error' => 'Please fill required data'
             ], 422);
         }
         $data = $request->all();
@@ -89,9 +106,16 @@ class PropertyController extends Controller
         $property->deleted_by = auth()->user()->id;
         $property->save();
         $property->delete();
+        $properties = Property::with('user')->get();
+
+        $properties = $properties->map(function ($item) {
+            $item->user_name = $item->user->name ?? null;
+            return $item;
+        });
 
         return response()->json([
             'success' => true,
+            'data' => $properties
         ]);
     }
 

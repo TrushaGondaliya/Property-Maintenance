@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from './components/Navbar';
 import PropertyList from './components/PropertyList';
 import WorkOrder from "./components/WorkOrder";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import Alert from "./components/Alert";
+import AddProperty from "./components/AddProperty";
 
 function App() {
   const [alert, setAlert] = useState(null);
@@ -30,6 +31,7 @@ function App() {
             <Route path="/work_order" element={<WorkOrder showAlert={showAlert} />} />
             <Route path="/login" element={<Login showAlert={showAlert}/>} />
             <Route path="/register" element={<Register showAlert={showAlert}/>} />
+            <Route path="/add_property" element={<AddProperty showAlert={showAlert}/>} />
           </Routes>
         </div>
       </Router>
