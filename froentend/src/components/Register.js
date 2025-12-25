@@ -14,6 +14,7 @@ const Register = (props) => {
         }).then((res) => {
                 if (res.data.success) {
                     localStorage.setItem('auth_token', res.data.auth_token);
+                    localStorage.setItem('isTech', res.data.isTech);
                 }
                 props.showAlert('Register Successfully!', 'success');
                 navigate('/');

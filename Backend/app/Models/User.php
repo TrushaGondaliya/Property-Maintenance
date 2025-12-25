@@ -44,4 +44,9 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function workOrders()
+    {
+        return $this->hasMany(WorkOrder::class, 'technican_id');
+    }
 }

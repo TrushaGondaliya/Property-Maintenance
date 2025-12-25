@@ -40,22 +40,23 @@ class UserController extends Controller
             $user->password = Hash::make($data['password']);
             $user->role = $data['role_id'];
             $user->save();
+            $isTech = ($user->role === 1) ? 'false' : 'true';
             $token = $user->createToken('api-token')->plainTextToken;
-
             // Commit if everything is successful
             DB::commit();
 
             // Step 4: Return success response
             return response()->json([
                 'success' => true,
-                "auth_token" => $token
+                "auth_token" => $token,
+                "isTech" => $isTech
             ]);
         } catch (\Throwable $th) {
             DB::rollBack();
             return response()->json([
                 'success' => false,
                 'errors' => $th->getMessage(),
-                'custom_error' => 'Some error occured during the process'
+                'custom_error' => 'Some error occurred during the process'
             ], 500);
         }
     }
@@ -81,8 +82,8 @@ class UserController extends Controller
             // Step 3: Validation passed — get data
             $data = $validator->validated();
             $user = User::where('email', $data['email'])->first();
-            if(!$user) {
-                 return response()->json([
+            if (!$user) {
+                return response()->json([
                     'success' => false,
                     'custom_error' => 'User not found',
                 ], 404);
@@ -93,13 +94,15 @@ class UserController extends Controller
                     'success' => false,
                     'custom_error' => 'Credentials do not match',
                 ], 402);
-            } 
+            }
+            $isTech = ($user->role == 1) ? 'false' : 'true';
             $token = $user->createToken('api-token')->plainTextToken;
 
             // Step 4: Return success response
             return response()->json([
                 'success' => true,
-                'auth_token' => $token
+                'auth_token' => $token,
+                'isTech' => $isTech
             ]);
         } catch (\Throwable $th) {
             DB::rollBack();

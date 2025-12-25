@@ -10,10 +10,12 @@ const Login = (props) => {
         e.preventDefault();
         const { email, password } = credentials;
         api.post("/login", {
-            email: email, password:password
+            email: email, password: password
         }).then((res) => {
                 if (res.data.success) {
                     localStorage.setItem('auth_token', res.data.auth_token);
+                    localStorage.setItem('isTech', res.data.isTech);
+                    api.defaults.headers.common["Authorization"] = `Bearer ${res.data.auth_token}`;
                     props.showAlert('Login Successfully!', 'success');
                     navigate('/');
                 }

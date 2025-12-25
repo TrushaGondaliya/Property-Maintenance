@@ -1,8 +1,13 @@
-import React from 'react';
-import { Link, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
     const navigate = useNavigate();
+    const location = useLocation();
+    const [url, setUrl] = useState(null);
+    useEffect(() => {
+        setUrl(location.pathname);
+    }, [location]);
     const handleLogout = () => {
         localStorage.removeItem('auth_token');
         navigate('/login');
@@ -18,10 +23,10 @@ const Navbar = () => {
                     <div className="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                             <li className="nav-item">
-                                <Link className="nav-link active" aria-current="page" to="/">Property List</Link>
+                                <Link className={`nav-link ${url === '/' ? 'active' : ''}`} aria-current="page" to="/">Property List</Link>
                             </li>
                             <li className="nav-item">
-                                <Link className="nav-link" to="/work_order">Work orders</Link>
+                                <Link className={`nav-link ${url === '/work_order' ? 'active' : ''}`} to="/work_order">Work orders</Link>
                             </li>
                         </ul>
                         {!localStorage.getItem('auth_token') ? <form className="d-flex" role="search">

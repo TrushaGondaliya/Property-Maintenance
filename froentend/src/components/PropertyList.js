@@ -1,28 +1,25 @@
 import React, { useEffect, useRef, useState } from "react";
 import api from '../api';
 import { Link, useNavigate } from "react-router-dom";
+import Pagination from "./Pagination";
 
 function PropertyList(props) {
-  const [properties, setProperties] = useState([]);
+  
   const [property, setProperty] = useState([{ id: "", name: "", description: "", address: "" }]);
   const navigate = useNavigate();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [propertyPerPage] = useState(5);
+  const indexOfLastProperty = currentPage * propertyPerPage;
+  const indexOfFirstProperty = indexOfLastProperty - propertyPerPage;
+  const currentProperties = props.properties.slice(indexOfFirstProperty, indexOfLastProperty);
 
-  useEffect(() => {
-    if (localStorage.getItem('auth_token')) {
-      api.get("/property/list")
-        .then((res) => {
-          if (res.data.success) {
-            setProperties(res.data.data);
-          }
-        })
-        .catch((err) => {
-          console.error("API Error:", err);
-        });
-    } else {
-      props.showAlert('Please login to the site for access property management', 'danger');
-      navigate('/login');
-    }
-  }, []);
+    useEffect(() => {
+      if (!localStorage.getItem('auth_token')) {
+        props.showAlert('Please login to the site for access property management', 'danger');
+        navigate('/login');
+      }
+    }, []);
+
 
   const ref = useRef(null);
   const refClose = useRef(null);
@@ -42,7 +39,7 @@ function PropertyList(props) {
     }).then((res) => {
       props.showAlert('Property updated successfully!', 'success');
       if (res.data.success) {
-        setProperties(res.data.data);
+        props.setProperties(res.data.data);
       }
       refClose.current.click();
     })
@@ -63,7 +60,7 @@ function PropertyList(props) {
     }).then((res) => {
       props.showAlert('Property deleted successfully!', 'success');
       if (res.data.success) {
-        setProperties(res.data.data);
+        props.setProperties(res.data.data);
       }
     })
       .catch((err) => {
@@ -125,9 +122,9 @@ function PropertyList(props) {
             </tr>
           </thead>
           <tbody>
-            {properties.map((p, index) => (
+            {currentProperties.map((p, index) => (
               <tr key={p.id}>
-                <th scope="row">{index + 1}</th>
+                <th scope="row">{indexOfFirstProperty + index + 1}</th>
                 <td>{p.name}</td>
                 <td>{p.description}</td>
                 <td>{p.address}</td>
@@ -142,6 +139,12 @@ function PropertyList(props) {
             ))}
           </tbody>
         </table>
+        <Pagination
+            dataPerPage={propertyPerPage}
+            totalData={props.properties.length}
+            setCurrentPage={setCurrentPage}
+            currentPage={currentPage}
+          />
       </div>
     </>
   );
