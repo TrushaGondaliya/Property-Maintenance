@@ -13,6 +13,7 @@ import api from "./api";
 function App() {
   const [alert, setAlert] = useState(null);
   const [properties, setProperties] = useState([]);
+  const [allProperties, setAllProperties] = useState([]);
   const showAlert = (message, type) => {
     setAlert({
       msg: message,
@@ -27,6 +28,7 @@ function App() {
       api.get("/property/list")
         .then((res) => {
           if (res.data.success) {
+            setAllProperties(res.data.data);
             setProperties(res.data.data);
           }
         })
@@ -45,7 +47,7 @@ function App() {
         <Alert alert={alert} />
         <div className="container">
           <Routes>
-            <Route path="/" element={<PropertyList showAlert={showAlert} properties={properties} setProperties={setProperties} />} />
+            <Route path="/" element={<PropertyList showAlert={showAlert} properties={properties} setProperties={setProperties} allProperties={allProperties} setAllProperties={setAllProperties} />} />
             <Route path="/work_order" element={<WorkOrder showAlert={showAlert} properties={properties}/>} />
             <Route path="/login" element={<Login showAlert={showAlert}/>} />
             <Route path="/register" element={<Register showAlert={showAlert}/>} />

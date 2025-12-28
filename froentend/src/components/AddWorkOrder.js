@@ -40,7 +40,7 @@ const AddWorkOrder = (props) => {
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label htmlFor="title" className="form-label">Title</label>
-          <input type="text" name='title' className="form-control" id="title" onChange={handleChange} aria-describedby="title" />  
+          <input type="text" name='title' className="form-control" id="title" onChange={handleChange} required />  
         </div>
         <div className="mb-3">
           <label htmlFor="description" className="form-label">Description</label>
@@ -48,8 +48,8 @@ const AddWorkOrder = (props) => {
         </div>
         <div className="mb-3">
           <label htmlFor="property_id" className="form-label">Address</label>
-          <select className="form-select"  onChange={handleChange} name='property_id' aria-label="Default select example">
-            <option defaultValue={0}>Please select property</option>
+          <select className="form-select"  onChange={handleChange} name='property_id' aria-label="Default select example" required>
+            <option value="">Please select property</option>
             {
                 props.properties.map((p) => (
                     <option key={p.id} value={p.id}>{p.address}</option>
@@ -59,8 +59,8 @@ const AddWorkOrder = (props) => {
         </div>
         <div className="mb-3">
             <label htmlFor="status" className="form-label">Status</label>
-            <select className="form-select" onChange={handleChange} name='status' aria-label="Default select example">
-                <option defaultValue={0}>Please select status</option>
+            <select className="form-select" onChange={handleChange} name='status' aria-label="Default select example" required>
+                <option value="">Please select status</option>
                 <option key="pending" value="pending">Pending</option>
                 <option key="in_progress" value="in_progress">In Progress</option>
                 <option key="completed" value="completed">Completed</option>

@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import api from "../api";
 import { Link, useNavigate } from "react-router-dom";
 import Pagination from "./Pagination";
-import { BsSearch } from "react-icons/bs";
+import { BsSearch, BsX } from "react-icons/bs";
 
 const WorkOrder = (props) => {
   const [work_orders, setWorkOrders] = useState([]);
@@ -35,9 +35,12 @@ const WorkOrder = (props) => {
       });
   };
   const [searchVal, setSearchVal] = useState("");
+  const handleResetClick = () => {
+    setSearchVal("");
+    setWorkOrders(allWorkOrders);
+  };
   function handleSearchClick() {
     if (searchVal === "") {
-      console.log(allWorkOrders);
       setWorkOrders(allWorkOrders);
       return;
     }
@@ -45,12 +48,20 @@ const WorkOrder = (props) => {
     const lower = searchVal.toLowerCase();
 
     const filtered = allWorkOrders.filter((item) => {
+      const techNames = item.technicians
+        ? item.technicians
+            .map((t) => t.name)
+            .join(", ")
+            .toLowerCase()
+        : "";
+
       return (
         item.title?.toLowerCase().includes(lower) ||
         item.description?.toLowerCase().includes(lower) ||
         item.status_text?.toLowerCase().includes(lower) ||
         item.property?.address?.toLowerCase().includes(lower) ||
-        item.user?.name?.toLowerCase().includes(lower)
+        item.user?.name?.toLowerCase().includes(lower) ||
+        techNames.includes(lower)
       );
     });
 
@@ -192,7 +203,6 @@ const WorkOrder = (props) => {
         className="modal fade"
         id="exampleModal"
         tabIndex="-1"
-        aria-labelledby="exampleModalLabel"
         aria-hidden="true"
       >
         <div className="modal-dialog">
@@ -230,7 +240,7 @@ const WorkOrder = (props) => {
                         className="form-control"
                         id="title"
                         onChange={handleChange}
-                        aria-describedby="title"
+                        required
                       />
                     </div>
                     <div className="mb-3">
@@ -256,8 +266,9 @@ const WorkOrder = (props) => {
                         onChange={handleChange}
                         name="property_id"
                         aria-label="Default select example"
+                        required
                       >
-                        <option>Please select property</option>
+                        <option value="">Please select property</option>
                         {props.properties.map((p) => (
                           <option
                             key={p.id}
@@ -303,8 +314,9 @@ const WorkOrder = (props) => {
                     onChange={handleChange}
                     name="status"
                     aria-label="Default select example"
+                    required
                   >
-                    <option defaultValue={0}>Please select status</option>
+                    <option value="">Please select status</option>
                     <option key="pending" value="pending">
                       Pending
                     </option>
@@ -335,7 +347,10 @@ const WorkOrder = (props) => {
         </div>
       </div>
       <div className="container mt-2">
-        <div className="d-flex align-items-center justify-content-between mb-2" style={{ gap: "15px" }}>
+        <div
+          className="d-flex align-items-center justify-content-between mb-2"
+          style={{ gap: "15px" }}
+        >
           <h2>Work Order List</h2>
           {localStorage.getItem("isTech") === "false" && (
             <Link
@@ -352,6 +367,7 @@ const WorkOrder = (props) => {
               type="text"
               className="form-control"
               aria-label="Text input with dropdown button"
+              value={searchVal}
               onChange={(e) => setSearchVal(e.target.value)}
             />
             <button
@@ -361,6 +377,13 @@ const WorkOrder = (props) => {
               onClick={handleSearchClick}
             >
               <BsSearch />
+            </button>
+            <button
+              className="btn btn-outline-secondary"
+              type="button"
+              onClick={handleResetClick}
+            >
+              <BsX />
             </button>
           </div>
         </div>

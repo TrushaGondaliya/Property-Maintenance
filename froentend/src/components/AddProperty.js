@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 const AddProperty = (props) => {
   const [property, setProperty] = useState({name: "", description: "", address: ""})
   const navigate = useNavigate(null);
-  const handleCancle = () => {
+  const handleCancel = () => {
     navigate('/');
   }
   const handleSubmit = (e) => {
@@ -32,7 +32,7 @@ const AddProperty = (props) => {
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label htmlFor="name" className="form-label">Name</label>
-          <input type="text" name='name' className="form-control" id="name" onChange={handleChange} aria-describedby="name" />  
+          <input type="text" name='name' className="form-control" id="name" onChange={handleChange} />  
         </div>
         <div className="mb-3">
           <label htmlFor="description" className="form-label">Description</label>
@@ -42,7 +42,7 @@ const AddProperty = (props) => {
           <label htmlFor="address" className="form-label">Address</label>
           <input type="text" name='address' required className="form-control" onChange={handleChange} id="address" />
         </div>
-        <button type="button" className="btn btn-danger mx-2" onClick={handleCancle}>Cancel</button>
+        <button type="button" className="btn btn-danger mx-2" onClick={handleCancel}>Cancel</button>
         <button type="submit" className="btn btn-primary">Submit</button>
       </form>
     </div>
